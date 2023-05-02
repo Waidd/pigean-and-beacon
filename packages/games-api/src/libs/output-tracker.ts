@@ -4,8 +4,8 @@ import type EventEmitter from 'node:events';
  * Code from https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks#output-tracking
  */
 export default class OutputTracker<T> {
-	public static create() {
-		return new OutputTracker();
+	public static create<T>() {
+		return new OutputTracker<T>();
 	}
 
 	private _emitter: EventEmitter | undefined;

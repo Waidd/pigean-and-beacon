@@ -8,4 +8,8 @@ export class AuthenticationDto {
 	@IsString()
 	@IsNotEmpty()
 	password!: string;
+
+	@IsString()
+	@IsNotEmpty()
+	displayName!: string;
 }

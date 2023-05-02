@@ -1,16 +1,18 @@
 import process from 'node:process';
 import pg from 'pg';
 
-/**
- * TODO: replace pg with https://www.npmjs.com/package/postgres which seems to have
- * better performances
- */
+export type SqlClientTrackedOutput = {query: string; values: any[]};
 
+export type SqlClientResponse<R> = {
+	command: string;
+	rowCount: number;
+	rows: R[];
+};
 export type SqlClient = {
 	query<R extends Record<string, any> = any, I extends any[] = any[]>(
 		query: string,
 		values?: I,
-	): Promise<{command: string; rowCount: number; rows: R[]}>;
+	): Promise<SqlClientResponse<R>>;
 };
 
 export type SqlClientProvider = () => Promise<SqlClient>;

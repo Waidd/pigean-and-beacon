@@ -1,10 +1,12 @@
 import EventEmitter from 'node:events';
 import type OutputTracker from '../../../libs/output-tracker.js';
-import type ConfigurableResponses from '../../../libs/configurable-responses.js';
+import ConfigurableResponses from '../../../libs/configurable-responses.js';
 import {
 	type SqlClientProvider,
 	getClient,
 	type SqlClient,
+	type SqlClientResponse,
+	type SqlClientTrackedOutput,
 } from '../../../database.js';
 import {type Player} from '../domain/player.entity.js';
 
@@ -21,8 +23,16 @@ export class PlayerRepository {
 	}
 
 	public static createNull(
-		players: ConfigurableResponses<PlayerSql>,
-		outputTracker?: OutputTracker<{query: string; values: any[]}>,
+		players: ConfigurableResponses<PlayerSql> = ConfigurableResponses.createSingle<PlayerSql>(
+			{
+				id: 1,
+				email: 'foo@bar.com',
+				hash: 'some-secret-hash',
+				display_name: 'Foo Bar',
+			},
+			'PlayerRepository',
+		),
+		outputTracker?: OutputTracker<SqlClientTrackedOutput>,
 	): PlayerRepository {
 		return new PlayerRepository(
 			async () => new StubbedPlayerSqlClient(players, outputTracker),
@@ -79,7 +89,7 @@ export class StubbedPlayerSqlClient implements SqlClient {
 
 	public constructor(
 		private readonly _players: ConfigurableResponses<PlayerSql>,
-		outputTracker?: OutputTracker<{query: string; values: any[]}>,
+		outputTracker?: OutputTracker<SqlClientTrackedOutput>,
 	) {
 		if (outputTracker) {
 			this._emitter = new EventEmitter();
@@ -90,20 +100,13 @@ export class StubbedPlayerSqlClient implements SqlClient {
 	public async query<
 		R extends Record<string, any> = any,
 		I extends any[] = any[],
-	>(
-		query: string,
-		values?: I,
-	): Promise<{
-		command: string;
-		rowCount: number;
-		rows: R[];
-	}> {
+	>(query: string, values?: I): Promise<SqlClientResponse<R>> {
 		const rows = this._players.next();
 		this._emitter?.emit(queryEvent, {query, values});
 		return {
 			command: query,
 			rowCount: 1,
-			rows: rows as unknown as R[], // @TODO improve that ?
+			rows: (Array.isArray(rows) ? rows : [rows]) as R[],
 		};
 	}
 }

@@ -10,10 +10,10 @@ export default class ConfigurableResponses<T> {
 	 *  - array; list of responses
 	 */
 	public static createSingle<T>(
-		responses: T,
+		response: T,
 		name: string,
 	): ConfigurableResponses<T> {
-		return new ConfigurableResponses<T>(responses, 'single', name);
+		return new ConfigurableResponses<T>(response, 'single', name);
 	}
 
 	public static createList<T>(responses: T[], name: string) {

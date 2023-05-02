@@ -1,4 +1,5 @@
 import {Body, Controller, Post} from '@nestjs/common';
+import * as argon from 'argon2';
 import {AuthenticationContainer} from './authentication.container.js';
 import {AuthenticationDto} from './authentication.dto.js';
 
@@ -9,7 +10,9 @@ export class AuthenticationController {
 	) {}
 
 	@Post('signup')
-	public signup(@Body() dto: AuthenticationDto) {
+	public async signup(@Body() dto: AuthenticationDto) {
+		const hash = await argon.hash(dto.password);
+
 		console.log(dto);
 		return this.authenticationService.signup();
 	}
