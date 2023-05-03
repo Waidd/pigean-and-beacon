@@ -1,6 +1,6 @@
 import {PlayerRepository} from '../../../../src/app/player/infrastructure/player.repository.js';
-import {type SqlClientTrackedOutput} from '../../../../src/database.js';
 import OutputTracker from '../../../../src/libs/output-tracker.js';
+import {type SqlClientTrackedOutput} from '../../../../src/libs/pool-wrapper.js';
 
 describe('Nulled PlayerRepository - unit test', () => {
 	describe('create', () => {

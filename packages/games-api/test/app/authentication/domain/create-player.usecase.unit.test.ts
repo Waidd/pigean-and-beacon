@@ -1,7 +1,7 @@
 import {SignUpUsecase} from '../../../../src/app/authentication/domain/sign-up.usecase.js';
 import {PlayerRepository} from '../../../../src/app/player/infrastructure/player.repository.js';
-import {type SqlClientTrackedOutput} from '../../../../src/database.js';
 import OutputTracker from '../../../../src/libs/output-tracker.js';
+import {type SqlClientTrackedOutput} from '../../../../src/libs/pool-wrapper.js';
 
 describe('SignUpUsecase - unit test', () => {
 	it('should return the created player', async () => {

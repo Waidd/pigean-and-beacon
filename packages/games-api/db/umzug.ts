@@ -1,7 +1,8 @@
+import process from 'node:process';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {readFileSync} from 'node:fs';
-import {type Client} from 'pg';
+import pg from 'pg';
 import {
 	type MigrationParams,
 	Umzug,
@@ -9,17 +10,16 @@ import {
 	type RunnableMigration,
 } from 'umzug';
 import * as dotenv from 'dotenv';
-import {getClient, closeClient} from '../src/database.js';
 
 dotenv.config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-class PgStorage implements UmzugStorage<Client> {
-	public constructor(public client: Client) {}
+class PgStorage implements UmzugStorage<pg.Client> {
+	public constructor(public client: pg.Client) {}
 
 	public async logMigration(
-		parameters: MigrationParams<Client>,
+		parameters: MigrationParams<pg.Client>,
 	): Promise<void> {
 		await this.client.query(`insert into meta_migrations_(name) values ($1)`, [
 			parameters.name,
@@ -27,7 +27,7 @@ class PgStorage implements UmzugStorage<Client> {
 	}
 
 	public async unlogMigration(
-		parameters: MigrationParams<Client>,
+		parameters: MigrationParams<pg.Client>,
 	): Promise<void> {
 		await this.client.query(`delete from meta_migrations_ where name = $1`, [
 			parameters.name,
@@ -35,7 +35,7 @@ class PgStorage implements UmzugStorage<Client> {
 	}
 
 	public async executed(
-		_meta: Pick<MigrationParams<Client>, 'context'>,
+		_meta: Pick<MigrationParams<pg.Client>, 'context'>,
 	): Promise<string[]> {
 		await this.client.query(
 			`create table if not exists meta_migrations_(name text)`,
@@ -47,7 +47,8 @@ class PgStorage implements UmzugStorage<Client> {
 	}
 }
 
-const client = await getClient();
+const client = new pg.Client(process.env.DATABASE_URL);
+await client.connect();
 const pgStorage = new PgStorage(client);
 
 export const migrator = new Umzug({
@@ -56,7 +57,7 @@ export const migrator = new Umzug({
 		resolve(parameters) {
 			const getModule = async () =>
 				import(`file:///${parameters.path!.replace(/\\/g, '/')}`) as Promise<
-					RunnableMigration<Client>
+					RunnableMigration<pg.Client>
 				>;
 			return {
 				name: parameters.name,
@@ -86,5 +87,8 @@ export const migrator = new Umzug({
 	},
 });
 
-await migrator.runAsCLI();
-await closeClient();
+try {
+	await migrator.runAsCLI();
+} finally {
+	await client.end();
+}

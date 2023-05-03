@@ -5,8 +5,8 @@ describe('PlayerRepository - integration test', () => {
 	const playerRepository = PlayerRepository.create();
 
 	afterEach(async () => {
-		const client = await getClient();
-		await client.query('DELETE FROM player_;');
+		const sql = getClient();
+		await sql.query('DELETE FROM player_;');
 	});
 
 	afterAll(async () => {
@@ -25,8 +25,8 @@ describe('PlayerRepository - integration test', () => {
 			// When
 			await playerRepository.save(givenPlayer);
 
-			const client = await getClient();
-			const result = await client.query(`SELECT * FROM player_;`);
+			const sql = getClient();
+			const result = await sql.query(`SELECT * FROM player_;`);
 
 			expect(result.rows).toEqual([
 				{
