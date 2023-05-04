@@ -1,8 +1,13 @@
 import {closeClient, getClient} from '../../../../src/database.js';
-import {PlayerRepository} from '../../../../src/app/player/infrastructure/player.repository.js';
+import {ArgonHashAndVerify} from '../../../../src/libs/hash-and-verify-wrapper.js';
+import {
+	PlayerRepository,
+	type PlayerSql,
+} from '../../../../src/app/player/infrastructure/player.repository.js';
 
 describe('PlayerRepository - integration test', () => {
 	const playerRepository = PlayerRepository.create();
+	const hashAndVerify = new ArgonHashAndVerify();
 
 	afterEach(async () => {
 		const sql = getClient();
@@ -16,17 +21,17 @@ describe('PlayerRepository - integration test', () => {
 	describe('save', () => {
 		const givenPlayer = {
 			email: 'foo@bar.com',
-			hash: 'some-secret-hash',
+			password: 'some-secret-hash',
 			displayName: 'Foo Bar',
 		};
 
 		// Then
-		it('should save a player in the database', async () => {
+		it('should save a player in the database with a hashed password', async () => {
 			// When
 			await playerRepository.save(givenPlayer);
 
 			const sql = getClient();
-			const result = await sql.query(`SELECT * FROM player_;`);
+			const result = await sql.query<PlayerSql>(`SELECT * FROM player_;`);
 
 			expect(result.rows).toEqual([
 				{
@@ -34,25 +39,37 @@ describe('PlayerRepository - integration test', () => {
 					created_at: expect.any(Date) as Date,
 					updated_at: expect.any(Date) as Date,
 					email: givenPlayer.email,
-					hash: givenPlayer.hash,
+					password: expect.any(String) as string,
 					display_name: givenPlayer.displayName,
 				},
 			]);
+			expect(
+				await hashAndVerify.verify(
+					result.rows[0].password,
+					givenPlayer.password,
+				),
+			).toBe(true);
 		});
 
-		it('should return the saved player', async () => {
+		it('should return the saved player with the hashed password', async () => {
 			// When
 			const savedPlayer = await playerRepository.save(givenPlayer);
 
 			// Then
-			expect(savedPlayer).toEqual(givenPlayer);
+			expect(savedPlayer).toEqual({
+				...givenPlayer,
+				password: expect.any(String) as string,
+			});
+			expect(
+				await hashAndVerify.verify(savedPlayer.password, givenPlayer.password),
+			).toBe(true);
 		});
 	});
 
-	describe('getByEmail', () => {
+	describe('getByEmailAndPassword', () => {
 		const givenPlayer = {
 			email: 'foo@bar.com',
-			hash: 'some-secret-hash',
+			password: 'some-secret-password',
 			displayName: 'Foo Bar',
 		};
 		beforeEach(async () => {
@@ -62,15 +79,38 @@ describe('PlayerRepository - integration test', () => {
 
 		it('should return the player with the given email', async () => {
 			// When
-			const player = await playerRepository.getByEmail(givenPlayer.email);
+			const player = await playerRepository.getByEmailAndPassword(
+				givenPlayer.email,
+				givenPlayer.password,
+			);
 
 			// Then
-			expect(player).toEqual(givenPlayer);
+			expect(player).toEqual({
+				...givenPlayer,
+				password: expect.any(String) as string,
+			});
+			expect(
+				await hashAndVerify.verify(player!.password, givenPlayer.password),
+			).toBe(true);
 		});
 
 		it('should return undefined if no player with the given email exists', async () => {
 			// When
-			const player = await playerRepository.getByEmail('non-existing-email');
+			const player = await playerRepository.getByEmailAndPassword(
+				'non-existing-email',
+				'whatever',
+			);
+
+			// Then
+			expect(player).toBeUndefined();
+		});
+
+		it('should return undefined if the given password does not match the player password', async () => {
+			// When
+			const player = await playerRepository.getByEmailAndPassword(
+				givenPlayer.email,
+				'wrong-password',
+			);
 
 			// Then
 			expect(player).toBeUndefined();
@@ -80,7 +120,7 @@ describe('PlayerRepository - integration test', () => {
 	describe('isDisplayNameTaken', () => {
 		const givenPlayer = {
 			email: 'foo@bar.com',
-			hash: 'some-secret-hash',
+			password: 'some-secret-hash',
 			displayName: 'Foo Bar',
 		};
 		beforeEach(async () => {

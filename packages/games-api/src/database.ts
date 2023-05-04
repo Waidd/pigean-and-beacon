@@ -1,6 +1,6 @@
 import process from 'node:process';
 import pg from 'pg';
-import {PgPoolWrapper} from './libs/pool-wrapper.js';
+import {PgPoolWrapper} from './libs/sql-pool-wrapper.js';
 
 let poolWrapper: PgPoolWrapper | undefined;
 export function getClient(): PgPoolWrapper {

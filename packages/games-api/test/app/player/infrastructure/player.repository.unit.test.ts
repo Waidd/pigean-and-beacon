@@ -1,6 +1,6 @@
 import {PlayerRepository} from '../../../../src/app/player/infrastructure/player.repository.js';
 import OutputTracker from '../../../../src/libs/output-tracker.js';
-import {type SqlClientTrackedOutput} from '../../../../src/libs/pool-wrapper.js';
+import {type SqlClientTrackedOutput} from '../../../../src/libs/sql-pool-wrapper.js';
 
 describe('Nulled PlayerRepository - unit test', () => {
 	describe('create', () => {
@@ -11,14 +11,14 @@ describe('Nulled PlayerRepository - unit test', () => {
 			// When
 			const player = await playerRepository.save({
 				email: 'foo@bar.com',
-				hash: 'some-secret-hash',
+				password: 'some-secret-password',
 				displayName: 'Foo Bar',
 			});
 
 			// Then
 			expect(player).toEqual({
 				email: 'foo@bar.com',
-				hash: 'some-secret-hash',
+				password: 'hashed:some-secret-password',
 				displayName: 'Foo Bar',
 			});
 		});
@@ -34,7 +34,7 @@ describe('Nulled PlayerRepository - unit test', () => {
 			// When
 			await playerRepository.save({
 				email: 'foo2@bar1.com',
-				hash: 'some-secret-hash-14',
+				password: 'some-secret-password-14',
 				displayName: 'Lord Foo Bar',
 			});
 
@@ -42,7 +42,7 @@ describe('Nulled PlayerRepository - unit test', () => {
 			expect(outputTracker.data).toHaveLength(1);
 			expect(outputTracker.data[0].values).toEqual([
 				'foo2@bar1.com',
-				'some-secret-hash-14',
+				'hashed:some-secret-password-14',
 				'Lord Foo Bar',
 			]);
 		});

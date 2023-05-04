@@ -6,7 +6,7 @@ export const up: MigrationFn<Client> = async ({context: client}) => {
 		CREATE TABLE IF NOT EXISTS player_ (
 			id serial4 NOT NULL,
 			email varchar(255) NOT NULL,
-			hash varchar(255) NOT NULL,
+			password varchar(255) NOT NULL,
 			display_name varchar(255) NOT NULL,
 			created_at timestamp NOT NULL DEFAULT now(),
 			updated_at timestamp NOT NULL DEFAULT now(),

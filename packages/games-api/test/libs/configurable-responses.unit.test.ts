@@ -5,13 +5,13 @@ describe('ConfigurableReponses - unit test', () => {
 	const playerA = {
 		id: 1,
 		email: 'foo@bar.com',
-		hash: 'some-secret-hash',
+		password: 'hashed:some-secret-hash',
 		display_name: 'Foo Bar',
 	};
 	const playerB = {
 		id: 2,
 		email: 'john@doe.com',
-		hash: 'some-secret-hash3',
+		password: 'hashed:some-secret-hash3',
 		display_name: 'John Doe',
 	};
 

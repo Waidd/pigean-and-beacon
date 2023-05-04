@@ -9,7 +9,7 @@ import {
 } from '../../../../src/app/player/infrastructure/player.repository.js';
 import ConfigurableResponses from '../../../../src/libs/configurable-responses.js';
 import OutputTracker from '../../../../src/libs/output-tracker.js';
-import {type SqlClientTrackedOutput} from '../../../../src/libs/pool-wrapper.js';
+import {type SqlClientTrackedOutput} from '../../../../src/libs/sql-pool-wrapper.js';
 
 describe('SignUpUsecase - unit test', () => {
 	it('should return the created player', async () => {
@@ -19,14 +19,14 @@ describe('SignUpUsecase - unit test', () => {
 		// When
 		const player = await signUp({
 			email: 'foo@bar.com',
-			hash: 'some-secret-hash',
+			password: 'some-secret-password',
 			displayName: 'Foo Bar',
 		});
 
 		// Then
 		expect(player).toEqual({
 			email: 'foo@bar.com',
-			hash: 'some-secret-hash',
+			password: 'hashed:some-secret-password',
 			displayName: 'Foo Bar',
 		});
 	});
@@ -43,7 +43,7 @@ describe('SignUpUsecase - unit test', () => {
 		// When
 		await signUp({
 			email: 'foo@bar.com',
-			hash: 'some-secret-hash',
+			password: 'some-secret-password',
 			displayName: 'Foo Bar',
 		});
 
@@ -51,7 +51,7 @@ describe('SignUpUsecase - unit test', () => {
 		expect(outputTracker.data).toHaveLength(3);
 		expect(outputTracker.data[2].values).toEqual([
 			'foo@bar.com',
-			'some-secret-hash',
+			'hashed:some-secret-password',
 			'Foo Bar',
 		]);
 	});
@@ -66,7 +66,7 @@ describe('SignUpUsecase - unit test', () => {
 					values: {
 						id: 1,
 						email: 'foo@bar.com',
-						hash: 'some-secret-hash',
+						password: 'hashed:some-secret-pasword',
 						display_name: 'Foo Bar',
 					},
 				},
@@ -77,7 +77,7 @@ describe('SignUpUsecase - unit test', () => {
 		// When
 		const result = await signUp({
 			email: 'foo@bar.com',
-			hash: 'some-secret-hash',
+			password: 'some-secret-pasword',
 			displayName: 'Foo Bar',
 		});
 
@@ -101,7 +101,7 @@ describe('SignUpUsecase - unit test', () => {
 						{
 							id: 1,
 							email: 'foo@bar.com',
-							hash: 'some-secret-hash',
+							password: 'hashed:some-secret-pasword',
 							display_name: 'Foo Bar',
 						},
 					],
@@ -113,7 +113,7 @@ describe('SignUpUsecase - unit test', () => {
 		// When
 		const result = await signUp({
 			email: 'foo@bar.com',
-			hash: 'some-secret-hash',
+			password: 'some-secret-pasword',
 			displayName: 'Foo Bar',
 		});
 

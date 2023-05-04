@@ -1,5 +1,5 @@
 export type Player = {
 	email: string;
-	hash: string;
+	password: string;
 	displayName: string;
 };
