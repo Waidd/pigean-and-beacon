@@ -1,3 +1,4 @@
+import {ConflictError} from '../../commun/domain/domain.error.js';
 import {PlayerRepository} from '../../player/infrastructure/player.repository.js';
 import {type Player} from '../../player/domain/player.entity.js';
 
@@ -7,7 +8,7 @@ export type SignUp = (
 	command: SignUpCommand,
 ) => Promise<Player | EmailAlreadyExistsError | DisplayNameAlreadyTakenError>;
 
-export class EmailAlreadyExistsError extends Error {
+export class EmailAlreadyExistsError extends ConflictError {
 	private readonly __nominal!: void;
 	constructor(email: string) {
 		const message = `Email already taken: ${email}`;
@@ -16,7 +17,7 @@ export class EmailAlreadyExistsError extends Error {
 	}
 }
 
-export class DisplayNameAlreadyTakenError extends Error {
+export class DisplayNameAlreadyTakenError extends ConflictError {
 	private readonly __nominal!: void;
 	constructor(displayName: string) {
 		const message = `Display name already taken: ${displayName}`;

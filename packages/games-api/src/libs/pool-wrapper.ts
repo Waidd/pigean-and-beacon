@@ -1,4 +1,4 @@
-import {EventEmitter} from 'node:stream';
+import {EventEmitter} from 'node:events';
 import {type Pool} from 'pg';
 import type ConfigurableResponses from './configurable-responses';
 import type OutputTracker from './output-tracker';
