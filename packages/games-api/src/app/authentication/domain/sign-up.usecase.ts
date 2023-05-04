@@ -2,7 +2,7 @@ import {ConflictError} from '../../commun/domain/domain.error.js';
 import {PlayerRepository} from '../../player/infrastructure/player.repository.js';
 import {type Player} from '../../player/domain/player.entity.js';
 
-export type SignUpCommand = Player & {password: string};
+export type SignUpCommand = Player;
 
 export type SignUp = (
 	command: SignUpCommand,

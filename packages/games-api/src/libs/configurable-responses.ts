@@ -20,16 +20,15 @@ export default class ConfigurableResponses<T> {
 		this._responses = structuredClone(responses);
 	}
 
-	public next(label = '*'): T | undefined {
+	public next(label?: string): T | undefined {
 		const response = this._responses.find(
-			(response) => response.label === label,
+			(response) => response.label === label || response.label === '*',
 		);
-		if (!response) throw new Error(`No response configured for ${label}`);
+		if (!response) throw new Error(`No response configured`);
 		if (response?.mode === 'single') return response.values;
 		if (!Array.isArray(response?.values))
 			throw new Error(`Expected array of values`);
-		if (response.values.length === 0)
-			throw new Error(`No more responses for ${label}`);
+		if (response.values.length === 0) throw new Error(`No more responses`);
 		return response.values.shift();
 	}
 }

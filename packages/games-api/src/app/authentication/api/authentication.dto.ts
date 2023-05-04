@@ -7,9 +7,19 @@ export class SignUpDto {
 
 	@IsString()
 	@IsNotEmpty()
-	password!: string;
+	public password!: string;
 
 	@IsString()
 	@IsNotEmpty()
-	displayName!: string;
+	public displayName!: string;
+}
+
+export class SignInDto {
+	@IsEmail()
+	@IsNotEmpty()
+	public email!: string;
+
+	@IsString()
+	@IsNotEmpty()
+	public password!: string;
 }

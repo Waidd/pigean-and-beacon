@@ -4,11 +4,13 @@ import {
 	ConflictException,
 	UnprocessableEntityException,
 	InternalServerErrorException,
+	ForbiddenException,
 } from '@nestjs/common';
 import {
 	NotFoundError,
 	ConflictError,
 	UnprocessableError,
+	ForbiddenError,
 } from '../domain/domain.error.js';
 
 export function domainToApiError(domainError: Error): HttpException {
@@ -18,6 +20,10 @@ export function domainToApiError(domainError: Error): HttpException {
 		return new ConflictException(domainError.message, {cause: domainError});
 	if (domainError instanceof UnprocessableError)
 		return new UnprocessableEntityException(domainError.message, {
+			cause: domainError,
+		});
+	if (domainError instanceof ForbiddenError)
+		return new ForbiddenException(domainError.message, {
 			cause: domainError,
 		});
 	return new InternalServerErrorException(domainError.message, {

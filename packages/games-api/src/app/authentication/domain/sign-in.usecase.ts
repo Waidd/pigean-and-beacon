@@ -1,6 +1,6 @@
-import {ConflictError} from 'src/app/commun/domain/domain.error';
-import {type Player} from 'src/app/player/domain/player.entity.js';
-import {PlayerRepository} from 'src/app/player/infrastructure/player.repository';
+import {ForbiddenError} from '../../commun/domain/domain.error.js';
+import {PlayerRepository} from '../../player/infrastructure/player.repository.js';
+import {type Player} from '../../player/domain/player.entity.js';
 
 export type SignInCommand = {
 	email: string;
@@ -11,7 +11,7 @@ export type SignIn = (
 	command: SignInCommand,
 ) => Promise<Player | InvalidCredentialsError>;
 
-export class InvalidCredentialsError extends ConflictError {
+export class InvalidCredentialsError extends ForbiddenError {
 	private readonly __nominal!: void;
 	constructor() {
 		const message = `Invalid credentials`;

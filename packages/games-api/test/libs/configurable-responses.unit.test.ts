@@ -54,6 +54,28 @@ describe('ConfigurableReponses - unit test', () => {
 		expect(response).toEqual(playerB);
 	});
 
+	it('should should return wildcard response when label not found', () => {
+		// Given
+		const responses = new ConfigurableResponses<PlayerSql>([
+			{
+				label: 'player',
+				mode: 'single',
+				values: playerA,
+			},
+			{
+				label: '*',
+				mode: 'single',
+				values: playerB,
+			},
+		]);
+
+		// When
+		const response = responses.next('foo');
+
+		// Then
+		expect(response).toEqual(playerB);
+	});
+
 	it('should throw an error when no response is configured for label', () => {
 		// Given
 		const responses = new ConfigurableResponses<PlayerSql>([]);
@@ -62,7 +84,7 @@ describe('ConfigurableReponses - unit test', () => {
 		const response = () => responses.next('player');
 
 		// Then
-		expect(response).toThrowError('No response configured for player');
+		expect(response).toThrowError('No response configured');
 	});
 
 	it('in array mode, should return different response at each call', () => {
@@ -102,6 +124,6 @@ describe('ConfigurableReponses - unit test', () => {
 
 		// Then
 		expect(responseA).toEqual(playerA);
-		expect(responseB).toThrowError('No more responses for player');
+		expect(responseB).toThrowError('No more responses');
 	});
 });

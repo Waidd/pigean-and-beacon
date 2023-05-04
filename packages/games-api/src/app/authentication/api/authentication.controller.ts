@@ -1,7 +1,7 @@
 import {Body, Controller, Post} from '@nestjs/common';
 import {domainToApiError} from '../../commun/api/domain-to-api-error.js';
 import {AuthenticationContainer} from './authentication.container.js';
-import {SignUpDto} from './authentication.dto.js';
+import {SignInDto, SignUpDto} from './authentication.dto.js';
 
 @Controller('authentication')
 export class AuthenticationController {
@@ -11,7 +11,7 @@ export class AuthenticationController {
 
 	@Post('signup')
 	public async signup(@Body() dto: SignUpDto) {
-		const playerOrError = await this.authenticationService.signup(dto);
+		const playerOrError = await this.authenticationService.signUp(dto);
 		if (playerOrError instanceof Error) return domainToApiError(playerOrError);
 		return {
 			email: playerOrError.email,
@@ -20,7 +20,12 @@ export class AuthenticationController {
 	}
 
 	@Post('signin')
-	public signin() {
-		return this.authenticationService.signin();
+	public async signin(@Body() dto: SignInDto) {
+		const playerOrError = await this.authenticationService.signIn(dto);
+		if (playerOrError instanceof Error) return domainToApiError(playerOrError);
+		return {
+			email: playerOrError.email,
+			displayName: playerOrError.displayName,
+		};
 	}
 }
