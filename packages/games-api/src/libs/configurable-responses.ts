@@ -7,7 +7,7 @@ type ResponseByLabel<T> =
 	| {
 			label: string;
 			mode: 'array';
-			values: T[];
+			values: Array<T | undefined>;
 	  };
 
 /**
@@ -20,16 +20,16 @@ export default class ConfigurableResponses<T> {
 		this._responses = structuredClone(responses);
 	}
 
-	public next(label = '*'): T {
+	public next(label = '*'): T | undefined {
 		const response = this._responses.find(
 			(response) => response.label === label,
 		);
 		if (!response) throw new Error(`No response configured for ${label}`);
-		if (response?.mode === 'single') return response.values as T;
+		if (response?.mode === 'single') return response.values;
 		if (!Array.isArray(response?.values))
 			throw new Error(`Expected array of values`);
-		const value = response.values.shift();
-		if (value === undefined) throw new Error(`No more responses for ${label}`);
-		return value;
+		if (response.values.length === 0)
+			throw new Error(`No more responses for ${label}`);
+		return response.values.shift();
 	}
 }

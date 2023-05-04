@@ -71,16 +71,18 @@ describe('ConfigurableReponses - unit test', () => {
 			{
 				label: 'player',
 				mode: 'array',
-				values: [playerA, playerB],
+				values: [playerA, undefined, playerB],
 			},
 		]);
 
 		// When
 		const responseA = responses.next('player');
+		const responseUndefined = responses.next('player');
 		const responseB = responses.next('player');
 
 		// Then
 		expect(responseA).toEqual(playerA);
+		expect(responseUndefined).toBeUndefined();
 		expect(responseB).toEqual(playerB);
 	});
 
