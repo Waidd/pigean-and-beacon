@@ -47,4 +47,19 @@ describe('Nulled PlayerRepository - unit test', () => {
 			]);
 		});
 	});
+
+	describe('isEmailTaken', () => {
+		it('it should return false by default', async () => {
+			// Given
+			const playerRepository = PlayerRepository.createNull();
+
+			// When
+			const isEmailTaken = await playerRepository.isEmailTaken(
+				'whatever@anywhere.com',
+			);
+
+			// Then
+			expect(isEmailTaken).toBe(false);
+		});
+	});
 });

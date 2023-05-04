@@ -40,8 +40,8 @@ describe('SignUpUsecase - unit test', () => {
 		});
 
 		// Then
-		expect(outputTracker.data).toHaveLength(1);
-		expect(outputTracker.data[0].values).toEqual([
+		expect(outputTracker.data).toHaveLength(3);
+		expect(outputTracker.data[2].values).toEqual([
 			'foo@bar.com',
 			'some-secret-hash',
 			'Foo Bar',

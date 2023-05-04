@@ -56,6 +56,7 @@ describe('PlayerRepository - integration test', () => {
 			displayName: 'Foo Bar',
 		};
 		beforeEach(async () => {
+			// Given
 			await playerRepository.save(givenPlayer);
 		});
 
@@ -73,6 +74,38 @@ describe('PlayerRepository - integration test', () => {
 
 			// Then
 			expect(player).toBeUndefined();
+		});
+	});
+
+	describe('isDisplayNameTaken', () => {
+		const givenPlayer = {
+			email: 'foo@bar.com',
+			hash: 'some-secret-hash',
+			displayName: 'Foo Bar',
+		};
+		beforeEach(async () => {
+			// Given
+			await playerRepository.save(givenPlayer);
+		});
+
+		it('should return true if a player with the given display name exists', async () => {
+			// When
+			const isTaken = await playerRepository.isDisplayNameTaken(
+				givenPlayer.displayName,
+			);
+
+			// Then
+			expect(isTaken).toBe(true);
+		});
+
+		it('should return false if no player with the given display name exists', async () => {
+			// When
+			const isTaken = await playerRepository.isDisplayNameTaken(
+				'non-existing-display-name',
+			);
+
+			// Then
+			expect(isTaken).toBe(false);
 		});
 	});
 });

@@ -21,15 +21,25 @@ export class PlayerRepository {
 	}
 
 	public static createNull(
-		players: ConfigurableResponses<PlayerSql> = ConfigurableResponses.createSingle<PlayerSql>(
+		players: ConfigurableResponses<
+			PlayerSql | PlayerSql[]
+		> = new ConfigurableResponses<PlayerSql>([
 			{
-				id: 1,
-				email: 'foo@bar.com',
-				hash: 'some-secret-hash',
-				display_name: 'Foo Bar',
+				label: 'player',
+				mode: 'single',
+				values: {
+					id: 1,
+					email: 'foo@bar.com',
+					hash: 'some-secret-hash',
+					display_name: 'Foo Bar',
+				},
 			},
-			'PlayerRepository',
-		),
+			{
+				label: '*',
+				mode: 'single',
+				values: undefined,
+			},
+		]),
 		outputTracker?: OutputTracker<SqlClientTrackedOutput>,
 	): PlayerRepository {
 		return new PlayerRepository(new StubbedPoolWrapper(players, outputTracker));
@@ -45,6 +55,7 @@ export class PlayerRepository {
 				RETURNING *;
 			`,
 			[player.email, player.hash, player.displayName],
+			'player',
 		);
 
 		return {
@@ -62,6 +73,7 @@ export class PlayerRepository {
 				WHERE email = $1;
 			`,
 			[email],
+			'player',
 		);
 
 		if (result.rows.length === 0) return undefined;
@@ -71,5 +83,31 @@ export class PlayerRepository {
 			hash: result.rows[0].hash,
 			displayName: result.rows[0].display_name,
 		};
+	}
+
+	public async isEmailTaken(email: string): Promise<boolean> {
+		const result = await this.sql.query<PlayerSql>(
+			`
+				SELECT *
+				FROM player_
+				WHERE email = $1;
+			`,
+			[email],
+		);
+
+		return result.rows.length > 0;
+	}
+
+	public async isDisplayNameTaken(displayName: string): Promise<boolean> {
+		const result = await this.sql.query<PlayerSql>(
+			`
+				SELECT *
+				FROM player_
+				WHERE display_name = $1;
+			`,
+			[displayName],
+		);
+
+		return result.rows.length > 0;
 	}
 }

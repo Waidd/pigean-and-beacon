@@ -15,6 +15,7 @@ export type SqlQueryFn = <
 >(
 	query: string,
 	values?: I,
+	label?: string,
 ) => Promise<SqlClientResponse<R>>;
 
 export type SqlPoolWrapper = {
@@ -54,7 +55,11 @@ export class PgPoolWrapper implements SqlPoolWrapper {
 	}
 }
 
-export type SqlClientTrackedOutput = {query: string; values: any[]};
+export type SqlClientTrackedOutput = {
+	label: string;
+	query: string;
+	values: any[];
+};
 
 const queryEvent = 'query';
 
@@ -74,9 +79,17 @@ export class StubbedPoolWrapper<T> implements SqlPoolWrapper {
 	public async query<
 		R extends Record<string, any> = any,
 		I extends any[] = any[],
-	>(query: string, values?: I): Promise<SqlClientResponse<R>> {
-		const rows = this._responses.next();
-		this._emitter?.emit(queryEvent, {query, values});
+	>(query: string, values?: I, label?: string): Promise<SqlClientResponse<R>> {
+		this._emitter?.emit(queryEvent, {label, query, values});
+		const rows = this._responses.next(label);
+		if (!rows) {
+			return {
+				command: query,
+				rowCount: 0,
+				rows: [],
+			};
+		}
+
 		return {
 			command: query,
 			rowCount: 1,
