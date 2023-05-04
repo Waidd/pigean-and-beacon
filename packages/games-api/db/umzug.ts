@@ -48,8 +48,6 @@ class PgStorage implements UmzugStorage<pg.Client> {
 }
 
 const client = new pg.Client(process.env.DATABASE_URL);
-await client.connect();
-const pgStorage = new PgStorage(client);
 
 export const migrator = new Umzug({
 	migrations: {
@@ -74,7 +72,7 @@ export const migrator = new Umzug({
 		},
 	},
 	context: client,
-	storage: pgStorage,
+	storage: new PgStorage(client),
 	logger: console,
 	create: {
 		folder: 'src/db/migrations',
@@ -88,6 +86,7 @@ export const migrator = new Umzug({
 });
 
 try {
+	await client.connect();
 	await migrator.runAsCLI();
 } finally {
 	await client.end();

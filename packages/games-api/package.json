@@ -18,7 +18,10 @@
     "coverage": "npm run test -- --coverage",
     "db:migration:create": "ts-node --project ./tsconfig.json --esm db/umzug.ts create",
     "db:migrate": "ts-node --project ./tsconfig.json --esm db/umzug.ts up",
-    "db:migrate:undo": "ts-node --project ./tsconfig.json --esm db/umzug.ts down"
+    "db:migrate:undo": "ts-node --project ./tsconfig.json --esm db/umzug.ts down",
+    "db:create": "ts-node --project ./tsconfig.json --esm db/create-database.ts",
+    "db:drop": "ts-node --project ./tsconfig.json --esm db/drop-database.ts",
+    "db:regenerate": "npm run db:drop && npm run db:create && npm run db:migrate"
   },
   "author": "Thomas Cholley <cholley.t@gmail.com>",
   "devDependencies": {
