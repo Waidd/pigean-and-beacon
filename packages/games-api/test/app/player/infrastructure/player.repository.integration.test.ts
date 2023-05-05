@@ -66,6 +66,40 @@ describe('PlayerRepository - integration test', () => {
 		});
 	});
 
+	describe('getByEmail', () => {
+		const givenPlayer = {
+			email: 'foo@bar.com',
+			password: 'some-secret-password',
+			displayName: 'Foo Bar',
+		};
+		beforeEach(async () => {
+			// Given
+			await playerRepository.save(givenPlayer);
+		});
+
+		it('should return the player with the given email', async () => {
+			// When
+			const player = await playerRepository.getByEmail(givenPlayer.email);
+
+			// Then
+			expect(player).toEqual({
+				...givenPlayer,
+				password: expect.any(String) as string,
+			});
+			expect(
+				await hashAndVerify.verify(player!.password, givenPlayer.password),
+			).toBe(true);
+		});
+
+		it('should return undefined if no player with the given email exists', async () => {
+			// When
+			const player = await playerRepository.getByEmail('non-existing-email');
+
+			// Then
+			expect(player).toBeUndefined();
+		});
+	});
+
 	describe('getByEmailAndPassword', () => {
 		const givenPlayer = {
 			email: 'foo@bar.com',

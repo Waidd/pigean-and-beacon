@@ -78,10 +78,7 @@ export class PlayerRepository {
 		};
 	}
 
-	public async getByEmailAndPassword(
-		email: string,
-		password: string,
-	): Promise<Player | undefined> {
+	public async getByEmail(email: string): Promise<Player | undefined> {
 		const result = await this.sql.query<PlayerSql>(
 			`
 				SELECT *
@@ -94,19 +91,29 @@ export class PlayerRepository {
 
 		if (result.rows.length === 0) return undefined;
 
+		return {
+			email: result.rows[0].email,
+			password: result.rows[0].password,
+			displayName: result.rows[0].display_name,
+		};
+	}
+
+	public async getByEmailAndPassword(
+		email: string,
+		password: string,
+	): Promise<Player | undefined> {
+		const player = await this.getByEmail(email);
+		if (!player) return undefined;
+
 		const isPasswordValid = await this.hashAndVerify.verify(
-			result.rows[0].password,
+			player.password,
 			password,
 		);
 		if (!isPasswordValid) {
 			return undefined;
 		}
 
-		return {
-			email: result.rows[0].email,
-			password: result.rows[0].password,
-			displayName: result.rows[0].display_name,
-		};
+		return player;
 	}
 
 	public async isEmailTaken(email: string): Promise<boolean> {
