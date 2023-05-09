@@ -1,16 +1,16 @@
-import process from 'node:process';
 import {PassportStrategy} from '@nestjs/passport';
 import {ExtractJwt, Strategy} from 'passport-jwt';
 import {Injectable} from '@nestjs/common';
 import {PlayerContainer} from '../../player/api/player.container.js';
 import {domainToApiError} from '../../commun/api/domain-to-api-error.js';
+import configuration from '../../../configuration.js';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 	public constructor(private readonly playerContainer: PlayerContainer) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-			secretOrKey: process.env.JWT_SECRET!,
+			secretOrKey: configuration.JWT_SECRET,
 		});
 	}
 

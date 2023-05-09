@@ -1,4 +1,3 @@
-import process from 'node:process';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {readFileSync} from 'node:fs';
@@ -9,9 +8,7 @@ import {
 	type UmzugStorage,
 	type RunnableMigration,
 } from 'umzug';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
+import configuration from '../src/configuration.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -47,7 +44,11 @@ class PgStorage implements UmzugStorage<pg.Client> {
 	}
 }
 
-const client = new pg.Client(process.env.DATABASE_URL);
+const client = new pg.Client(
+	configuration.isTest
+		? configuration.DATABASE_TEST_URL
+		: configuration.DATABASE_URL,
+);
 
 export const migrator = new Umzug({
 	migrations: {

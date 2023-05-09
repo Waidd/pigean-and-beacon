@@ -1,17 +1,18 @@
-import process from 'node:process';
 import pg from 'pg';
-import * as dotenv from 'dotenv';
+import configuration from '../src/configuration.js';
 
-dotenv.config();
-
-const url = new URL(process.env.DATABASE_URL!);
-const genericDatabaseUrl = url.toString().replace(url.pathname, '/postgres');
+const url = new URL(
+	configuration.isTest
+		? configuration.DATABASE_TEST_URL
+		: configuration.DATABASE_URL,
+);
 const databaseName = url.pathname.slice(1);
+url.pathname = '/postgres';
 
-const client = new pg.Client(genericDatabaseUrl);
+const client = new pg.Client(url.toString());
 try {
 	await client.connect();
-	await client.query(`DROP DATABASE ${databaseName};`);
+	await client.query(`DROP DATABASE IF EXISTS ${databaseName};`);
 } finally {
 	await client.end();
 }

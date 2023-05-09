@@ -21,7 +21,12 @@
     "db:migrate:undo": "ts-node --project ./tsconfig.json --esm db/umzug.ts down",
     "db:create": "ts-node --project ./tsconfig.json --esm db/create-database.ts",
     "db:drop": "ts-node --project ./tsconfig.json --esm db/drop-database.ts",
-    "db:regenerate": "npm run db:drop && npm run db:create && npm run db:migrate"
+    "db:regenerate": "npm run db:drop && npm run db:create && npm run db:migrate",
+    "db:test:migrate": "NODE_ENV=test ts-node --project ./tsconfig.json --esm db/umzug.ts up",
+    "db:test:migrate:undo": "NODE_ENV=test ts-node --project ./tsconfig.json --esm db/umzug.ts down",
+    "db:test:create": "NODE_ENV=test ts-node --project ./tsconfig.json --esm db/create-database.ts",
+    "db:test:drop": "NODE_ENV=test ts-node --project ./tsconfig.json --esm db/drop-database.ts",
+    "db:test:regenerate": "NODE_ENV=test npm run db:test:drop && npm run db:test:create && npm run db:test:migrate"
   },
   "author": "Thomas Cholley <cholley.t@gmail.com>",
   "devDependencies": {
@@ -52,6 +57,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
+    "envalid": "^7.3.1",
     "express": "^4.18.2",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",

@@ -1,7 +1,7 @@
-import process from 'node:process';
-import {Body, Controller, Post} from '@nestjs/common';
+import {Body, Controller, HttpCode, HttpStatus, Post} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {domainToApiError} from '../../commun/api/domain-to-api-error.js';
+import configuration from '../../../configuration.js';
 import {AuthenticationContainer} from './authentication.container.js';
 import {SignInDto, SignUpDto} from './authentication.dto.js';
 
@@ -22,6 +22,7 @@ export class AuthenticationController {
 		};
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Post('signin')
 	public async signin(@Body() dto: SignInDto) {
 		const playerOrError = await this.authenticationContainer.signIn(dto);
@@ -35,7 +36,7 @@ export class AuthenticationController {
 		};
 		const token = await this.jwt.signAsync(payload, {
 			expiresIn: '15m',
-			secret: process.env.JWT_SECRET!, // TODO improve that
+			secret: configuration.JWT_SECRET,
 		});
 		return {
 			access_token: token,
