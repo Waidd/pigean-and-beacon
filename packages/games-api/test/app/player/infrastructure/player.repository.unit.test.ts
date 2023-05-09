@@ -4,7 +4,7 @@ import {type SqlClientTrackedOutput} from '../../../../src/libs/sql-pool-wrapper
 
 describe('Nulled PlayerRepository - unit test', () => {
 	describe('create', () => {
-		it('should return a player', async () => {
+		test('should return a player', async () => {
 			// Given
 			const playerRepository = PlayerRepository.createNull();
 
@@ -23,7 +23,7 @@ describe('Nulled PlayerRepository - unit test', () => {
 			});
 		});
 
-		it('should track writen player', async () => {
+		test('should track writen player', async () => {
 			// Given
 			const outputTracker = OutputTracker.create<SqlClientTrackedOutput>();
 			const playerRepository = PlayerRepository.createNull(
@@ -49,7 +49,7 @@ describe('Nulled PlayerRepository - unit test', () => {
 	});
 
 	describe('isEmailTaken', () => {
-		it('it should return false by default', async () => {
+		test('it should return false by default', async () => {
 			// Given
 			const playerRepository = PlayerRepository.createNull();
 

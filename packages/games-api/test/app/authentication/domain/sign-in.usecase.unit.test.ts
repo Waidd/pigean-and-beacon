@@ -11,7 +11,7 @@ import OutputTracker from '../../../../src/libs/output-tracker.js';
 import {type SqlClientTrackedOutput} from '../../../../src/libs/sql-pool-wrapper.js';
 
 describe('SignInUsecase - unit test', () => {
-	it('should return the player if the credentials are valid', async () => {
+	test('should return the player if the credentials are valid', async () => {
 		// Given
 		const signIn = SignInUsecase.createNull();
 
@@ -29,7 +29,7 @@ describe('SignInUsecase - unit test', () => {
 		});
 	});
 
-	it('should look for the email in the database', async () => {
+	test('should look for the email in the database', async () => {
 		// Given
 		const outputTracker = OutputTracker.create<SqlClientTrackedOutput>();
 		const playerRepositoryStub = PlayerRepository.createNull(
@@ -49,7 +49,7 @@ describe('SignInUsecase - unit test', () => {
 		expect(outputTracker.data[0].values).toEqual(['foo@bar.com']);
 	});
 
-	it('should return an InvalidCredentialsError if the player is not found', async () => {
+	test('should return an InvalidCredentialsError if the player is not found', async () => {
 		// Given
 		const playerRepositoryStub = PlayerRepository.createNull(
 			new ConfigurableResponses<PlayerSql>([

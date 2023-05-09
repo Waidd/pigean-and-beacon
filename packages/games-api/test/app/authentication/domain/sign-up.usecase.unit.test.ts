@@ -12,7 +12,7 @@ import OutputTracker from '../../../../src/libs/output-tracker.js';
 import {type SqlClientTrackedOutput} from '../../../../src/libs/sql-pool-wrapper.js';
 
 describe('SignUpUsecase - unit test', () => {
-	it('should return the created player', async () => {
+	test('should return the created player', async () => {
 		// Given
 		const signUp = SignUpUsecase.createNull();
 
@@ -31,7 +31,7 @@ describe('SignUpUsecase - unit test', () => {
 		});
 	});
 
-	it('should write the player in the database', async () => {
+	test('should write the player in the database', async () => {
 		// Given
 		const outputTracker = OutputTracker.create<SqlClientTrackedOutput>();
 		const playerRepositoryStub = PlayerRepository.createNull(
@@ -56,7 +56,7 @@ describe('SignUpUsecase - unit test', () => {
 		]);
 	});
 
-	it('should return an EmailAlreadyExistsError if the email is already taken', async () => {
+	test('should return an EmailAlreadyExistsError if the email is already taken', async () => {
 		// Given
 		const playerRepositoryStub = PlayerRepository.createNull(
 			new ConfigurableResponses<PlayerSql>([
@@ -89,7 +89,7 @@ describe('SignUpUsecase - unit test', () => {
 		);
 	});
 
-	it('should return a DisplaynameAlreadyExistsError if the display name is already taken', async () => {
+	test('should return a DisplaynameAlreadyExistsError if the display name is already taken', async () => {
 		// Given
 		const playerRepositoryStub = PlayerRepository.createNull(
 			new ConfigurableResponses<PlayerSql>([
