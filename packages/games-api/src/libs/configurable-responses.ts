@@ -14,9 +14,13 @@ type ResponseByLabel<T> =
  * Inspired from https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks#configurable-responses
  */
 export default class ConfigurableResponses<T> {
-	private readonly _responses: Array<ResponseByLabel<T>>;
+	private _responses: Array<ResponseByLabel<T>>;
 
 	public constructor(responses: Array<ResponseByLabel<T>>) {
+		this._responses = structuredClone(responses);
+	}
+
+	public setResponses(responses: Array<ResponseByLabel<T>>): void {
 		this._responses = structuredClone(responses);
 	}
 

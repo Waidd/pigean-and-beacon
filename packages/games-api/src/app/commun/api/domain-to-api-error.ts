@@ -15,18 +15,18 @@ import {
 
 export function domainToApiError(domainError: Error): HttpException {
 	if (domainError instanceof NotFoundError)
-		return new NotFoundException(domainError.message, {cause: domainError});
+		throw new NotFoundException(domainError.message, {cause: domainError});
 	if (domainError instanceof ConflictError)
-		return new ConflictException(domainError.message, {cause: domainError});
+		throw new ConflictException(domainError.message, {cause: domainError});
 	if (domainError instanceof UnprocessableError)
-		return new UnprocessableEntityException(domainError.message, {
+		throw new UnprocessableEntityException(domainError.message, {
 			cause: domainError,
 		});
 	if (domainError instanceof ForbiddenError)
-		return new ForbiddenException(domainError.message, {
+		throw new ForbiddenException(domainError.message, {
 			cause: domainError,
 		});
-	return new InternalServerErrorException(domainError.message, {
+	throw new InternalServerErrorException(domainError.message, {
 		cause: domainError,
 	});
 }
