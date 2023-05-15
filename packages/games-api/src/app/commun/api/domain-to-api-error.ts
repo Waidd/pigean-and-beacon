@@ -13,7 +13,7 @@ import {
 	ForbiddenError,
 } from '../domain/domain.error.js';
 
-export function domainToApiError(domainError: Error): HttpException {
+export function domainToApiError(domainError: Error): never {
 	if (domainError instanceof NotFoundError)
 		throw new NotFoundException(domainError.message, {cause: domainError});
 	if (domainError instanceof ConflictError)
