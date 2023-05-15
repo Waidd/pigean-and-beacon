@@ -8,7 +8,7 @@ import {
 	type UmzugStorage,
 	type RunnableMigration,
 } from 'umzug';
-import configuration from '../src/configuration.js';
+import {getDatabaseUrl} from '../src/configuration.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -44,11 +44,7 @@ class PgStorage implements UmzugStorage<pg.Client> {
 	}
 }
 
-const client = new pg.Client(
-	configuration.isTest
-		? configuration.DATABASE_TEST_URL
-		: configuration.DATABASE_URL,
-);
+const client = new pg.Client(getDatabaseUrl());
 
 export const migrator = new Umzug({
 	migrations: {

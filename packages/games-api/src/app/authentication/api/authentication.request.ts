@@ -10,14 +10,14 @@ export class SignUpRequest {
 	public email!: string;
 
 	@ApiProperty({
-		example: 'a-very-secure-password',
+		example: 'some-secret-password',
 	})
 	@IsString()
 	@IsNotEmpty()
 	public password!: string;
 
 	@ApiProperty({
-		example: 'Sir Foo Bar',
+		example: 'Foo Bar',
 	})
 	@IsString()
 	@IsNotEmpty()
@@ -33,7 +33,7 @@ export class SignInRequest {
 	public email!: string;
 
 	@ApiProperty({
-		example: 'a-very-secure-password',
+		example: 'some-secret-password',
 	})
 	@IsString()
 	@IsNotEmpty()

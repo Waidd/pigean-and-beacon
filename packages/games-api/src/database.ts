@@ -1,15 +1,16 @@
 import pg from 'pg';
 import {PgPoolWrapper} from './libs/sql-pool-wrapper.js';
-import configuration from './configuration.js';
+import {getDatabaseUrl, isInNullMode} from './configuration.js';
 
 let poolWrapper: PgPoolWrapper | undefined;
 export function getClient(): PgPoolWrapper {
+	if (isInNullMode())
+		throw new Error('Should not use database in null mode');
+
 	if (poolWrapper) return poolWrapper;
 
 	const pool = new pg.Pool({
-		connectionString: configuration.isTest
-			? configuration.DATABASE_TEST_URL
-			: configuration.DATABASE_URL,
+		connectionString: getDatabaseUrl(),
 	});
 	const poolWrapperInstance = new PgPoolWrapper(pool);
 	poolWrapper = poolWrapperInstance;

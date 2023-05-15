@@ -3,7 +3,7 @@ import {ExtractJwt, Strategy} from 'passport-jwt';
 import {Injectable} from '@nestjs/common';
 import {PlayerContainer} from '../../player/api/player.container.js';
 import {domainToApiError} from '../../commun/api/domain-to-api-error.js';
-import configuration from '../../../configuration.js';
+import {configuration} from '../../../configuration.js';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {

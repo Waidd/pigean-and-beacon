@@ -10,7 +10,7 @@ export class PlayerResponse {
 	public email!: string;
 
 	@ApiProperty({
-		example: 'Sir Foo Bar',
+		example: 'Foo Bar',
 	})
 	@IsString()
 	@IsNotEmpty()

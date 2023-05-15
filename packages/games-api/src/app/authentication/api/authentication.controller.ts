@@ -3,7 +3,7 @@ import {JwtService} from '@nestjs/jwt';
 import {ApiCreatedResponse, ApiTags} from '@nestjs/swagger';
 import {PlayerResponse} from '../../player/api/player.response.js';
 import {domainToApiError} from '../../commun/api/domain-to-api-error.js';
-import configuration from '../../../configuration.js';
+import {configuration} from '../../../configuration.js';
 import {AuthenticationContainer} from './authentication.container.js';
 import {SignInRequest, SignUpRequest} from './authentication.request.js';
 import {SignInResponse} from './authentication.response.js';

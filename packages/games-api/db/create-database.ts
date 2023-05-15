@@ -1,11 +1,7 @@
 import pg from 'pg';
-import configuration from '../src/configuration.js';
+import {getDatabaseUrl} from '../src/configuration.js';
 
-const url = new URL(
-	configuration.isTest
-		? configuration.DATABASE_TEST_URL
-		: configuration.DATABASE_URL,
-);
+const url = new URL(getDatabaseUrl());
 const databaseName = url.pathname.slice(1);
 url.pathname = '/postgres';
 
