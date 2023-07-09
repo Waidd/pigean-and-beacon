@@ -4,8 +4,7 @@ import {getDatabaseUrl, isInNullMode} from './configuration.js';
 
 let poolWrapper: PgPoolWrapper | undefined;
 export function getClient(): PgPoolWrapper {
-	if (isInNullMode())
-		throw new Error('Should not use database in null mode');
+	if (isInNullMode()) throw new Error('Should not use database in null mode');
 
 	if (poolWrapper) return poolWrapper;
 

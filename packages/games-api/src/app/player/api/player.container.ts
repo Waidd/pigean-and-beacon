@@ -4,5 +4,7 @@ import {isInNullMode} from '../../../configuration.js';
 
 @Injectable({})
 export class PlayerContainer {
-	public getPlayer = isInNullMode() ? GetPlayerUsecase.createNull() : GetPlayerUsecase.create();
+	public getPlayer = isInNullMode()
+		? GetPlayerUsecase.createNull()
+		: GetPlayerUsecase.create();
 }

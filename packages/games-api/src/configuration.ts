@@ -17,15 +17,13 @@ const configuration = cleanEnv(process.env, {
 });
 
 function getDatabaseUrl(): string {
-	return configuration.isTest ? configuration.DATABASE_TEST_URL : configuration.DATABASE_URL;
+	return configuration.isTest
+		? configuration.DATABASE_TEST_URL
+		: configuration.DATABASE_URL;
 }
 
 function isInNullMode(): boolean {
 	return !configuration.isTest && configuration.NULL_MODE;
 }
 
-export {
-	configuration,
-	getDatabaseUrl,
-	isInNullMode,
-};
+export {configuration, getDatabaseUrl, isInNullMode};

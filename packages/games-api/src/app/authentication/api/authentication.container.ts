@@ -5,6 +5,11 @@ import {isInNullMode} from '../../../configuration.js';
 
 @Injectable({})
 export class AuthenticationContainer {
-	public signUp = isInNullMode() ? SignUpUsecase.createNull() : SignUpUsecase.create();
-	public signIn = isInNullMode() ? SignInUsecase.createNull() : SignInUsecase.create();
+	public signUp = isInNullMode()
+		? SignUpUsecase.createNull()
+		: SignUpUsecase.create();
+
+	public signIn = isInNullMode()
+		? SignInUsecase.createNull()
+		: SignInUsecase.create();
 }
