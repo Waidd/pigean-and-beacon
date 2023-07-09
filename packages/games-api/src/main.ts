@@ -2,6 +2,7 @@ import {NestFactory} from '@nestjs/core';
 import {ValidationPipe} from '@nestjs/common';
 import {SwaggerModule, DocumentBuilder} from '@nestjs/swagger';
 import {AppModule} from './app.module.js';
+import {configuration} from './configuration.js';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -11,7 +12,7 @@ async function bootstrap() {
 	const config = new DocumentBuilder()
 		.setTitle('Games API')
 		.setDescription('Games API description')
-		.setVersion('0.0')
+		.setVersion(configuration.npm_package_version)
 		.addBearerAuth()
 		.build();
 	const document = SwaggerModule.createDocument(app, config);

@@ -1,5 +1,6 @@
 import {Controller, Get} from '@nestjs/common';
 import {ApiOkResponse, ApiTags} from '@nestjs/swagger';
+import {configuration} from '../../../configuration.js';
 import {healthcheck} from '../../../database.js';
 
 @ApiTags('00 - probes')
@@ -8,7 +9,7 @@ export class ProbesController {
 	@Get('version')
 	@ApiOkResponse({type: String})
 	public async getVersion() {
-		return '0.0.0';
+		return configuration.npm_package_version;
 	}
 
 	@Get('readiness')

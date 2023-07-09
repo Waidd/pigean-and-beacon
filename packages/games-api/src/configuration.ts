@@ -6,6 +6,7 @@ import {bool, cleanEnv, str, url} from 'envalid';
 dotenv.config();
 
 const configuration = cleanEnv(process.env, {
+	npm_package_version: str(),
 	NODE_ENV: str({
 		choices: ['development', 'test', 'production', 'staging'],
 		default: 'development',
