@@ -22,3 +22,8 @@ export async function closeClient(): Promise<void> {
 	await poolWrapper.end();
 	poolWrapper = undefined;
 }
+
+export async function healthcheck(): Promise<void> {
+	const client = getClient();
+	await client.query('SELECT 1');
+}

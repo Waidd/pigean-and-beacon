@@ -10,7 +10,7 @@ services:
       - default
     image: postgres:15-alpine
     ports:
-      - '54323:5432'
+      - '54324:5432'
     environment:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test

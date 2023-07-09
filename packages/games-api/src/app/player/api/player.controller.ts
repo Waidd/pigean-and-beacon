@@ -8,7 +8,7 @@ import {PlayerResponse} from './player.response.js';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
-@ApiTags('player')
+@ApiTags('02 - player')
 @Controller('player')
 export class PlayerController {
 	public constructor(private readonly playerContainer: PlayerContainer) {}

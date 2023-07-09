@@ -1,6 +1,5 @@
 import {
 	NotFoundException,
-	type HttpException,
 	ConflictException,
 	UnprocessableEntityException,
 	InternalServerErrorException,

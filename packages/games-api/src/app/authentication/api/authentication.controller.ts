@@ -8,7 +8,7 @@ import {AuthenticationContainer} from './authentication.container.js';
 import {SignInRequest, SignUpRequest} from './authentication.request.js';
 import {SignInResponse} from './authentication.response.js';
 
-@ApiTags('authentication')
+@ApiTags('01 - authentication')
 @Controller('authentication')
 export class AuthenticationController {
 	public constructor(
